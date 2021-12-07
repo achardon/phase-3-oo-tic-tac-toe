@@ -2,11 +2,12 @@ require 'pry'
 
 class TicTacToe
 
-    attr_accessor :board, :winner
+    attr_accessor :board, :winning_player, :winning_combo
 
     def initialize
         @board = [" ", " ", " ", " ", " ", " ", " ", " ", " ",]
-        @winner = ""
+        @winning_player = ""
+        @winning_combo = []
     end
 
     WIN_COMBINATIONS = [
@@ -81,10 +82,12 @@ class TicTacToe
     def won?
         WIN_COMBINATIONS.each do |combo|
             if self.board[combo[0]] == "X" && self.board[combo[1]] == "X" && self.board[combo[2]] == "X"
-                self.winner = "X"
+                self.winning_player = "X"
+                winning_combo = combo
                 return combo
             elsif self.board[combo[0]] == "O" && self.board[combo[1]] == "O" && self.board[combo[2]] == "O"
-                self.winner = "O"
+                self.winning_player = "O"
+                winning_combo = combo
                 return combo
             end
         end
@@ -117,22 +120,21 @@ class TicTacToe
     end
 
     def winner
-        # binding.pry
-        # if self.winner != ""
-        #     binding.pry
-        #     return self.winner
-        # end
-        # if won?
-        #     binding.pry
-        #     return self.winner
-        # end
+        if won?
+            return self.winning_player
+        end
+    end
+
+    def play
+        while !over? && !draw?
+            turn
+        end
+        if won?
+            puts "Congratulations #{winning_player}!"
+        elsif draw?
+            puts "Cat's Game!"
+        end
     end
 
 end
 
-# game2 = TicTacToe.new
-# game2.board = ["O", "O", "O", " ", "X", " ", "X", " ", "X"]
-# game2.turn_count
-# puts game2.board
-# game2.turn
-# puts game2.won?
