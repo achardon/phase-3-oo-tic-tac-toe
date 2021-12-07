@@ -2,10 +2,11 @@ require 'pry'
 
 class TicTacToe
 
-    attr_accessor :board
+    attr_accessor :board, :winner
 
     def initialize
         @board = [" ", " ", " ", " ", " ", " ", " ", " ", " ",]
+        @winner = ""
     end
 
     WIN_COMBINATIONS = [
@@ -54,9 +55,84 @@ class TicTacToe
         count
     end
 
+    def current_player
+        current_player = "X"
+        current_count = turn_count
+        if current_count.odd?
+            current_player = "O"
+        end
+        return current_player
+    end
+
+    def turn
+        puts "Choose a number 1-9 of where you want to play your next move:"
+        user_input = gets.chomp
+        selected_index = input_to_index(user_input)
+        token = current_player
+        if valid_move?(selected_index)
+            move(selected_index, token)
+            display_board
+        else
+            puts "Invalid move. Please try again:"
+            turn
+        end
+    end
+
+    def won?
+        WIN_COMBINATIONS.each do |combo|
+            if self.board[combo[0]] == "X" && self.board[combo[1]] == "X" && self.board[combo[2]] == "X"
+                self.winner = "X"
+                return combo
+            elsif self.board[combo[0]] == "O" && self.board[combo[1]] == "O" && self.board[combo[2]] == "O"
+                self.winner = "O"
+                return combo
+            end
+        end
+        return false
+    end
+
+    def full? 
+        self.board.each do |n|
+            if n == " "
+                return false
+            end
+        end
+        return true
+    end
+
+    def draw?
+        if full? && won? == false
+            return true
+        else
+            return false
+        end
+    end
+
+    def over?
+        if won? || full?
+            return true
+        else
+            return false
+        end
+    end
+
+    def winner
+        # binding.pry
+        # if self.winner != ""
+        #     binding.pry
+        #     return self.winner
+        # end
+        # if won?
+        #     binding.pry
+        #     return self.winner
+        # end
+    end
+
 end
 
-game = TicTacToe.new
-game.display_board
-game.board = ["O", " ", "O", " ", "X", " ", " ", " ", "X"]
-game.turn_count
+# game2 = TicTacToe.new
+# game2.board = ["O", "O", "O", " ", "X", " ", "X", " ", "X"]
+# game2.turn_count
+# puts game2.board
+# game2.turn
+# puts game2.won?
